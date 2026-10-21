@@ -52,6 +52,7 @@ initial begin
 			end
 			if (reqs_o != model) begin
 				$display("ERROR %0dns | MODEL: 0b%0b, REAL: 0b%0b", $time, model, reqs_o);
+				$fatal()								;
 			end
 		end
 	end
@@ -63,7 +64,7 @@ end
 // —————————————————————————————————————————————————————
 initial begin
 	$dumpfile("wave.vcd");
-	$dumpvars(0, tb_fulladder);
+	$dumpvars(0, tb_irq_ctrl);
 end
 // —————————————————————————————————————————————————————
 endmodule
