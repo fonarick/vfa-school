@@ -33,13 +33,21 @@ module irq_ctrl (
         end
     end
 
+/* error
     always_comb begin
         reqs_lsb = 3'b0;
         for (int i = 2; i >= 0; i = i - 1) begin
             reqs_lsb = reqs_i[i] ? 3'(1'b1 << i) : reqs_lsb;
         end
     end
- 
+ */
+    always_comb begin
+        reqs_lsb = 3'b0;
+        for (int i = 0; i < 3; i = i + 1) begin
+            reqs_lsb = reqs_i[i] ? 3'(1'b1 << i) : reqs_lsb;
+        end
+    end
+
     assign reqs_o = mode_i ? reqs_lsb
                            : reqs_msb;
 

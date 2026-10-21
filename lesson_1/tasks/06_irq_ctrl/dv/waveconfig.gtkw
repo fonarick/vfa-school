@@ -1,0 +1,22 @@
+[*]
+[*] GTKWave Analyzer v3.3.127 (w)1999-2026 BSI
+[*] Wed Oct 21 18:48:35 2026
+[*]
+[dumpfile] "/home/fonarick/work/vfa-school/lesson_1/tasks/06_irq_ctrl/dv/build/wave.vcd"
+[dumpfile_mtime] "Wed Oct 21 18:48:27 2026"
+[dumpfile_size] 1141
+[savefile] "/home/fonarick/work/vfa-school/lesson_1/tasks/06_irq_ctrl/dv/waveconfig.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] 473 166
+*-5.595395 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 230
+[signals_width] 118
+[sst_expanded] 1
+[sst_vpaned_height] 173
+@28
+tb_irq_ctrl.mode_i
+tb_irq_ctrl.reqs_i[2:0]
+tb_irq_ctrl.reqs_o[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

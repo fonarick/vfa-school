@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.127 (w)1999-2026 BSI
+[*] Wed Oct 21 17:57:41 2026
+[*]
+[dumpfile] "/home/fonarick/work/vfa-school/lesson_1/tasks/00_fulladder/dv/build/wave.vcd"
+[dumpfile_mtime] "Wed Oct 21 17:57:07 2026"
+[dumpfile_size] 374323
+[savefile] "/home/fonarick/work/vfa-school/lesson_1/tasks/00_fulladder/dv/waveconfig.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-16.500000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_fulladder.
+[sst_width] 230
+[signals_width] 78
+[sst_expanded] 1
+[sst_vpaned_height] 173
+@28
+tb_fulladder.DUT.A_i
+tb_fulladder.DUT.B_i
+tb_fulladder.DUT.Cin_i
+tb_fulladder.DUT.Cout_o
+tb_fulladder.DUT.S_o
+[pattern_trace] 1
+[pattern_trace] 0
