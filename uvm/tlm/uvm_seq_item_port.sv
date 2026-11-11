@@ -7,7 +7,7 @@ class					uvm_seq_item_port			   #(
 	type					T			  =	int
 )														;
 // —————————————————————————————————————————————————————
-uvm_seq_item_export #(е)	m_export					;
+uvm_seq_item_export #(T)	m_export					;
 // —————————————————————————————————————————————————————
 // ————————— connect(uvm_seq_item_export #(T)): void
 // —————————————————————————————————————————————————————

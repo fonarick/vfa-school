@@ -17,7 +17,7 @@ static function void	set								(
 	string					field_name					,
 	T						value
 )														;
-	string					key			  =	(inst_name == "") ? field_name : {inst_name, ".", filed_name};
+	string					key			  =	(inst_name == "") ? field_name : {inst_name, ".", field_name};
 	m_db[key]							  =	value		;
 endfunction
 // —————————————————————————————————————————————————————

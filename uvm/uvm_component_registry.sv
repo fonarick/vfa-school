@@ -8,7 +8,7 @@ class					uvm_component_registry		   #(
 	string					NAME		  =	""
 ) extends uvm_object_wrapper							;
 // —————————————————————————————————————————————————————
-typedef uvm_component registry #(T, NAME) this_type		;
+typedef uvm_component_registry #(T, NAME) this_type		;
 // —————————————————————————————————————————————————————
 // ————————— ()
 // —————————————————————————————————————————————————————

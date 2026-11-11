@@ -3,7 +3,7 @@
 // —————————————————————————|———————————————————————————|———————————————————————————
 // ————————————————————————————————————————————————————————— uvm - uvm_component
 // —————————————————————————————————————————————————————————————————————————————————
-class					uvm_component					;
+class					uvm_component extends uvm_object;
 // —————————————————————————————————————————————————————
 uvm_component				m_parent					;
 uvm_component				m_children			[string];
@@ -241,7 +241,7 @@ endtask
 // —————————————————————————————————————————————————————
 // ————————— run_test(string): void
 // —————————————————————————————————————————————————————
-function void			run_test						(
+task					run_test						(
 	string					test_name	  =	""
 )														;
 	uvm_component			comp						;
@@ -269,9 +269,9 @@ function void			run_test						(
 	// create test
 	comp				  =	uvm_factory::get().create_component_by_name(test_name, "uvm_test_top", null);
 	if (comp == null)
-		`uvm_fatal("RUN_TEST", $sformatf("Test '%s' not found", test_name))
+		$fatal($sformatf("[%0t] [FATAL] [%s] [%s] %s", $time, "UVM", "RUN_TEST", {"Test ", test_name, " not found"}));
 	if (!$cast(test, comp))
-		`uvm_fatal("RUN_TEST", "Not a uvm_test")
+		$fatal($sformatf("[%0t] [FATAL] [%s] [%s] %s", $time, "UVM", "RUN_TEST", "Not a uvm_test"));
 
 	uvm_run_phase_top_down(test, "build", build_ph);
 	uvm_run_phase_bottom_up(test, "connect", connect_ph);
@@ -291,6 +291,6 @@ function void			run_test						(
 	uvm_run_phase_bottom_up(test, "check", check_ph);
 	uvm_run_phase_bottom_up(test, "report", report_ph);
 	uvm_run_phase_bottom_up(test, "final", final_ph);
-endfunction
+endtask
 // —————————————————————————|———————————————————————————|———————————————————————————
 `endif

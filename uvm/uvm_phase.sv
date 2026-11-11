@@ -24,7 +24,8 @@ function void			raise_objection					(
 	uvm_component			comp
 )														;
 	m_objection_count++									;
-	`uvm_info("PHASE", $sformatf("raised (count=%0d)", m_objection_count), UVM_HIGH)
+	if (`UVM_HIGH <= `UVM_VERBOSITY)
+		$display("[%0t] [INFO] [%s] [%s] %s", $time, "UVM", "PHASE", $sformatf("raised (count=%0d)", m_objection_count));
 endfunction
 // —————————————————————————————————————————————————————
 // ————————— drop_objection(uvm_component): void
@@ -33,7 +34,8 @@ function void			drop_objection					(
 	uvm_component			comp
 )														;
 	m_objection_count--									;
-	`uvm_info("PHASE", $sformatf("dropped (count=%0d)", m_objection_count), UVM_HIGH)
+	if (`UVM_HIGH <= `UVM_VERBOSITY)
+		$display("[%0t] [INFO] [%s] [%s] %s", $time, "UVM", "PHASE", $sformatf("dropped (count=%0d)", m_objection_count));
 	if (m_objection_count == 0)
 		->m_phase_done									;
 endfunction
