@@ -7,12 +7,20 @@ class					uvm_analysis_port			   #(
 	type					T			  =	int
 )														;
 // —————————————————————————————————————————————————————
-uvm_analysis_imp #(T)		m_imps					 [$];
+uvm_analysis_imp_base #(T)	m_imps					 [$];
+// —————————————————————————————————————————————————————
+// ————————— (string, uvm_component)
+// —————————————————————————————————————————————————————
+function				new								(
+	string					name		  =	""			,
+	uvm_component			parent		  =	null
+)														;
+endfunction
 // —————————————————————————————————————————————————————
 // ————————— connect(uvm_analysis_imp #(T)): void
 // —————————————————————————————————————————————————————
 function void			connect							(
-	uvm_analysis_imp #(T)	imp
+	uvm_analysis_imp_base #(T) imp
 )														;
 	m_imps.push_back(imp)								;
 endfunction

@@ -166,9 +166,44 @@ endfunction
 endclass
 // —————————————————————————————————————————————————————————————————————————————————
 // —————————————————————————————————————————————————————
+// ————————— uvm_collect_components(input uvm_component, ref uvm_component): void
+// —————————————————————————————————————————————————————
+function automatic void	uvm_collect_components			(
+	input uvm_component		comp						,
+	ref uvm_component		components				 [$]
+)														;
+	if (comp == null)
+		return											;
+	components.push_back(comp)							;
+	foreach (comp.m_children[c])
+		uvm_collect_components(comp.m_children[c], components);
+endfunction
+// —————————————————————————————————————————————————————
+// ————————— uvm_execute_component_phase(input uvm_component, input string, input uvm_phase): void
+// —————————————————————————————————————————————————————
+task automatic			uvm_execute_component_phase		(
+	input uvm_component		comp						,
+	input string			phase_name					,
+	input uvm_phase			phase
+)														;
+	case (phase_name)
+		"pre_reset":		comp.pre_reset_phase(phase)	;
+		"reset":			comp.reset_phase(phase)		;
+		"post_reset":		comp.post_reset_phase(phase);
+		"pre_configure":	comp.pre_configure_phase(phase);
+		"configure":		comp.configure_phase(phase)	;
+		"post_configure":	comp.post_configure_phase(phase);
+		"run":				comp.run_phase(phase)		;
+		"pre_shutdown":		comp.pre_shutdown_phase(phase);
+		"shutdown":			comp.shutdown_phase(phase)	;
+		"post_shutdown":	comp.post_shutdown_phase(phase);
+		default:			$fatal(1, "Unknown task phase: %s", phase_name);
+	endcase
+endtask
+// —————————————————————————————————————————————————————
 // ————————— uvm_run_phase_top_down(uvm_component, string, uvm_phase): void
 // —————————————————————————————————————————————————————
-function void			uvm_run_phase_top_down			(
+function automatic void	uvm_run_phase_top_down			(
 	uvm_component			comp						,
 	string					phase_name					,
 	uvm_phase				phase
@@ -186,7 +221,7 @@ endfunction
 // —————————————————————————————————————————————————————
 // ————————— uvm_run_phase_bottom_up(uvm_component, string, uvm_phase): void
 // —————————————————————————————————————————————————————
-function void			uvm_run_phase_bottom_up			(
+function automatic void	uvm_run_phase_bottom_up			(
 	uvm_component			comp						,
 	string					phase_name					,
 	uvm_phase				phase
@@ -210,38 +245,51 @@ endfunction
 // —————————————————————————————————————————————————————
 // ————————— uvm_run_phase_parallel(uvm_component, string, uvm_phase): void
 // —————————————————————————————————————————————————————
-task					uvm_run_phase_parallel			(
-	uvm_component			comp						,
-	string					phase_name					,
-	uvm_phase				phase
+task automatic			uvm_run_phase_parallel			(
+	input uvm_component		comp						,
+	input string			phase_name					,
+	input uvm_phase			phase
 )														;
-	if (comp == null)
+	uvm_component			components[$]				;
+	if (comp == null) begin
+		$fatal(1, "Phase '%s': null component", phase_name);
 		return											;
-
-	case (phase_name)
-	"pre_reset":			comp.pre_reset_phase(phase)	;
-	"reset":				comp.reset_phase(phase)		;
-	"post_reset":			comp.post_reset_phase(phase);
-	"pre_configure":		comp.pre_configure_phase(phase);
-	"configure":			comp.configure_phase(phase)	;
-	"post_configure":		comp.post_configure_phase(phase);
-	"run":					comp.run_phase(phase)		;
-	"pre_shutdown":			comp.pre_shutdown_phase(phase);
-	"shutdown":				comp.shutdown_phase(phase)	;
-	"post_shutdown":		comp.post_shutdown_phase(phase);
-	endcase
-
-	foreach (comp.m_children[c]) begin
-		automatic uvm_component child	  =	comp.m_children[c];
-		fork
-			uvm_run_phase_parallel(child, phase_name, phase);
-		join_none
 	end
+	if (phase == null) begin
+		$fatal(1, "Phase '%s': null phase", phase_name);
+		return											;
+	end
+	uvm_collect_components(comp, components)			;
+	foreach (components[i]) begin
+		if (components[i] == null) begin
+			$fatal(1, "Phase '%s': components[%0d] is null", phase_name, i);
+			return										;
+		end
+	end
+	fork
+		begin
+			foreach (components[i]) begin
+				automatic uvm_component current_comp = components[i];
+				fork
+					uvm_execute_component_phase(
+						current_comp,
+						phase_name,
+						phase
+					)									;
+				join_none
+			end
+			#1step										;
+			while (phase.m_objection_count != 0) begin
+				#1step									;
+			end
+			disable fork								;
+		end
+	join
 endtask
 // —————————————————————————————————————————————————————
 // ————————— run_test(string): void
 // —————————————————————————————————————————————————————
-task					run_test						(
+task automatic			run_test						(
 	string					test_name	  =	""
 )														;
 	uvm_component			comp						;
@@ -277,16 +325,16 @@ task					run_test						(
 	uvm_run_phase_bottom_up(test, "connect", connect_ph);
 	uvm_run_phase_bottom_up(test, "end_of_elaboration", end_of_elaboration_ph);
 	uvm_run_phase_bottom_up(test, "start_of_simulation", start_of_simulation_ph);
-	uvm_run_phase_parallel(test, "pre_reset", pre_reset_ph); pre_reset_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "reset", reset_ph); reset_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "post_reset", post_reset_ph); post_reset_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "pre_configure", pre_configure_ph); pre_configure_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "configure", configure_ph); configure_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "post_configure", post_configure_ph); post_configure_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "run", run_ph); run_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "pre_shutdown", pre_shutdown_ph); pre_shutdown_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "shutdown", shutdown_ph); shutdown_ph.wait_for_phase_done();
-	uvm_run_phase_parallel(test, "post_shutdown", post_shutdown_ph); post_shutdown_ph.wait_for_phase_done();
+	uvm_run_phase_parallel(test, "pre_reset", pre_reset_ph);
+	uvm_run_phase_parallel(test, "reset", reset_ph);
+	uvm_run_phase_parallel(test, "post_reset", post_reset_ph);
+	uvm_run_phase_parallel(test, "pre_configure", pre_configure_ph);
+	uvm_run_phase_parallel(test, "configure", configure_ph);
+	uvm_run_phase_parallel(test, "post_configure", post_configure_ph);
+	uvm_run_phase_parallel(test, "run", run_ph);
+	uvm_run_phase_parallel(test, "pre_shutdown", pre_shutdown_ph);
+	uvm_run_phase_parallel(test, "shutdown", shutdown_ph);
+	uvm_run_phase_parallel(test, "post_shutdown", post_shutdown_ph);
 	uvm_run_phase_bottom_up(test, "extract", extract_ph);
 	uvm_run_phase_bottom_up(test, "check", check_ph);
 	uvm_run_phase_bottom_up(test, "report", report_ph);

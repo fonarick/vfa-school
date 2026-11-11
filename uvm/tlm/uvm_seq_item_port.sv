@@ -9,6 +9,14 @@ class					uvm_seq_item_port			   #(
 // —————————————————————————————————————————————————————
 uvm_seq_item_export #(T)	m_export					;
 // —————————————————————————————————————————————————————
+// ————————— (string, uvm_component)
+// —————————————————————————————————————————————————————
+function				new								(
+	string					name		  =	""			,
+	uvm_component			parent		  =	null
+)														;
+endfunction
+// —————————————————————————————————————————————————————
 // ————————— connect(uvm_seq_item_export #(T)): void
 // —————————————————————————————————————————————————————
 function void			connect							(

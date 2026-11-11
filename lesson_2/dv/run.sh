@@ -1,9 +1,12 @@
 TOP_MODULE=mac_tb
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE}")" && pwd)
 
-verilator -Mdir build --binary --timing --top ${TOP_MODULE} -I../../uvm/ -Wno-IMPLICITSTATIC --trace --trace-vcd \
+verilator -Mdir build --assert --binary --timing --top ${TOP_MODULE} -I../../uvm/ -Wno-IMPLICITSTATIC -Wno-DEFOVERRIDE --trace --trace-vcd \
+	-DUVM_VERBOSITY=UVM_NONE \
 	${SCRIPT_DIR}/../rtl/mac.sv \
+	${SCRIPT_DIR}/mac_if.sv \
 	${SCRIPT_DIR}/../../uvm/uvm.sv \
+	${SCRIPT_DIR}/mac_tb_pkg.sv \
 	${SCRIPT_DIR}/mac_tb.sv
 
 cd ${SCRIPT_DIR}/build/

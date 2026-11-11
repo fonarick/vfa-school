@@ -6,22 +6,15 @@
 // —————————————————————————————————————————————————————
 // ————————— report
 // —————————————————————————————————————————————————————
-`define						UVM_NONE		0
-`define						UVM_LOW			100
-`define						UVM_MEDIUM		200
-`define						UVM_HIGH		300
-`define						UVM_FULL		400
-`define						UVM_DEBUG		500
-
 // global verbosity
-`define						UVM_VERBOSITY	`UVM_MEDIUM
+`define						UVM_VERBOSITY	UVM_MEDIUM
 
 `define						uvm_info(ID, MSG, SEV)									\
 	if (SEV <= `UVM_VERBOSITY)														\
-		$display("[%0t] [INFO] [%s] [%s] %s", $time, get_full_name(), ID, MSG)
+		$display("[%0t] [INFO] [%s] [%s] %s", $time, get_full_name(), ID, MSG);
 
 `define						uvm_error(ID, MSG)										\
-	$display("[%0t] [ERROR] [%s] [%s] %s", $time, get_full_name(), ID, MSG)
+	$display("[%0t] [ERROR] [%s] [%s] %s", $time, get_full_name(), ID, MSG);
 
 `define						uvm_fatal(ID, MSG)										\
 begin																				\

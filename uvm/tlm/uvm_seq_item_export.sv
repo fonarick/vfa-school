@@ -13,19 +13,19 @@ event						m_item_done_ev				;
 // ————————— (string, uvm_component)
 // —————————————————————————————————————————————————————
 function				new								(
-	string					name						,
-	uvm_component			parent
+	string					name		  =	""			,
+	uvm_component			parent		  =	null
 )														;
 	m_req_mbx							  =	new()		;
 endfunction
 // —————————————————————————————————————————————————————
 // ————————— send_request(T): void
 // —————————————————————————————————————————————————————
-function void			send_request					(
+task					send_request					(
 	T						req
 )														;
 	m_req_mbx.put(req)									;
-endfunction
+endtask
 // —————————————————————————————————————————————————————
 // ————————— get_next_item(output T): void
 // —————————————————————————————————————————————————————
